@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Bem-Estar</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="tela-login">
+  <div class="login-box">
+    <h1 class="titulo">bem <span>estar</span></h1>
+    <h2>BEM-ESTAR</h2>
+    <p>FAÇA SEU LOGIN!</p>
 
+    <form onsubmit="return login(event)">
+      <input type="text" id="usuario" placeholder="Usuário" required>
+      <input type="email" id="email" placeholder="E-mail" required>
+      <div class="senha-box">
+        <input type="password" id="senha" placeholder="Senha" required>
+        <span class="toggleSenha" onclick="togglePassword()">👁</span>
+      </div>
+      <a href="#">Esqueci minha senha</a>
+      <button type="submit" class="btn">ENTRAR</button>
+      <button type="button" class="btn google">GOOGLE</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

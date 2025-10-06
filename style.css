@@ -1,1 +1,84 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #2f2f2f;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
 
+.container, .login-box, .tela-dashboard main {
+  width: 90%;
+  max-width: 400px;
+  margin: auto;
+}
+
+.titulo {
+  font-size: 2.5rem;
+  color: #8fd93c;
+}
+
+.titulo span {
+  color: #40c4ff;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #40c4ff;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn.google {
+  background: black;
+  color: white;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+.senha-box {
+  position: relative;
+}
+
+.toggleSenha {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.card {
+  width: 100%;
+  padding: 15px;
+  background: #555;
+  border-radius: 10px;
+  margin: 10px 0;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.plano {
+  margin-top: 20px;
+}
+
+.caixa-plano {
+  background: black;
+  color: yellow;
+  padding: 10px;
+  border-radius: 10px;
+}
