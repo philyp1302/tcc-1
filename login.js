@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   
   
   // ===== CONFIG SUPABASE =====
-const SUPABASE_URL = "https://xxxxxxxxxxxxxxxxxxxx.supabase.co";   // troque
-const SUPABASE_ANON_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx um  código bem grande vai aqui xxxxxxxx";             // troque
+const SUPABASE_URL = "https://kmxnphbacdbfycvmxypt.supabase.co";   // troque
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtteG5waGJhY2RiZnljdm14eXB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NzAxNjcsImV4cCI6MjA3NjE0NjE2N30.uKni6Wttx41_VXgyENTudiRYjw4sHh_Duqmc9KKHevk";             // troque
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // ===== ELEMENTOS =====
