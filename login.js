@@ -1,45 +1,117 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
-// 🔧 Substitua pelos dados do seu projeto Supabase:
-const SUPABASE_URL = 'https://SEU-PROJETO.supabase.co'
-const SUPABASE_ANON_KEY = 'SEU-CHAVE-ANON'
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+document.addEventListener("DOMContentLoaded", () => {
+  
+  
+  // ===== CONFIG SUPABASE =====
+const SUPABASE_URL = "https://kmxnphbacdbfycvmxypt.supabase.co";   // troque
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtteG5waGJhY2RiZnljdm14eXB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NzAxNjcsImV4cCI6MjA3NjE0NjE2N30.uKni6Wttx41_VXgyENTudiRYjw4sHh_Duqmc9KKHevk";             // troque
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// =============================
-// LOGIN COM E-MAIL/SENHA
-// =============================
-document.getElementById('loginForm').addEventListener('submit', async (e) => {
-  e.preventDefault()
+  // ===== ELEMENTOS =====
+  const tabs = document.querySelectorAll('.tab');
+  const panes = document.querySelectorAll('.pane');
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const authMsg = document.getElementById('authMsg');
+  const privateArea = document.getElementById('privateArea');
+  const welcomeUser = document.getElementById('welcomeUser');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const googleLoginBtn = document.getElementById("googleLoginBtn");
 
-  const emailOrUser = document.getElementById('loginUser').value.trim()
-  const password = document.getElementById('loginPass').value
+  const showMsg = (text, type = "success") => {
+    if (!authMsg) return;
+    authMsg.textContent = text;
+    authMsg.className = `msg ${type}`;
+  };
+  const clearMsg = () => showMsg("");
 
-  // Suporte a login tanto com e-mail quanto com usuário (se desejar)
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: emailOrUser,
-    password
-  })
+  // ===== TROCA DE ABAS =====
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabs.forEach(b => b.classList.remove('active'));
+      panes.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab)?.classList.add('active');
+    });
+  });
 
-  if (error) {
-    document.getElementById('authMsg').textContent = 'Erro: ' + error.message
-  } else {
-    // ✅ Redireciona para a dashboard
-    window.location.href = 'https://philyp1302.github.io/tcc-1/dashboard.html'
-  }
-})
+  // ===== LOGIN COM GOOGLE =====
+  googleLoginBtn?.addEventListener("click", async () => {
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+    if (error) showMsg("Erro ao entrar com Google: " + error.message, "error");
+  });
 
-// =============================
-// LOGIN COM GOOGLE
-// =============================
-document.getElementById('googleLoginBtn').addEventListener('click', async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: 'https://philyp1302.github.io/tcc-1/dashboard.html'
+  // ===== CADASTRO =====
+  registerForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearMsg();
+
+    const nome = document.getElementById('regNome').value.trim();
+    const dataNascimento = document.getElementById('regNascimento').value.trim();
+    const email = document.getElementById('regEmail').value.trim().toLowerCase();
+    const telefone = document.getElementById('regTelefone').value.trim();
+    const usuario = document.getElementById('regUsuario').value.trim().toLowerCase();
+    const senha = document.getElementById('regSenha').value;
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password: senha,
+        options: {
+          data: { full_name: nome, dob: dataNascimento, phone: telefone, username: usuario }
+        }
+      });
+
+      if (error) return showMsg("Erro ao cadastrar: " + error.message, "error");
+
+      showMsg("Conta criada! Verifique seu e-mail.", "success");
+      registerForm.reset();
+      document.querySelector('.tab[data-tab="login-pane"]').click();
+    } catch {
+      showMsg("Erro inesperado ao cadastrar.", "error");
     }
-  })
+  });
 
-  if (error) {
-    document.getElementById('authMsg').textContent = 'Erro no login com Google: ' + error.message
-  }
-})
+  // ===== LOGIN =====
+  loginForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearMsg();
+
+    const userOrEmail = document.getElementById('loginUser').value.trim().toLowerCase();
+    const pass = document.getElementById('loginPass').value;
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: userOrEmail,
+        password: pass
+      });
+
+      if (error) return showMsg("Erro ao entrar: " + error.message, "error");
+
+      showMsg("Login realizado com sucesso!", "success");
+      loginForm.reset();
+
+      window.location.href = 'https://philyp1302.github.io/tcc-1/dashboard.html'
+   
+    } catch {
+      showMsg("Erro inesperado no login.", "error");
+    }
+  });
+
+  // ===== ESTADO DE AUTENTICAÇÃO =====
+  supabase.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) {
+      privateArea.classList.remove('hidden');
+      welcomeUser.textContent = `Bem-vindo, ${session.user.user_metadata?.full_name || session.user.email}!`;
+    } else {
+      privateArea.classList.add('hidden');
+    }
+  });
+
+  // ===== LOGOUT =====
+  logoutBtn?.addEventListener('click', async () => {
+    await supabase.auth.signOut();
+    showMsg("Você saiu da conta.", "success");
+  });
+});
